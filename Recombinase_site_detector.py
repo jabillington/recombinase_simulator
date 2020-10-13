@@ -87,6 +87,48 @@ def main():
                 outputs.append(key)
     print(outputs)
     
+    def check_complementary_sites(input):
+        print('Searching for recombinase sites')
+        print('...............................')
+        print('...............................')
+        print('...............................')
+        permitted=['TT','AA', 'CT','GA', 'GT','AC','CA', 'CC','TC','GG']
+        
+        print('Finding compatible pairs')
+        paired_samples = {}
+        for nuc in permitted:
+            loop_list=[]
+            for output in outputs:
+                if output['dinucleotide']== nuc:
+                    loop_list.append(output)
+                    paired_samples['%s'% nuc]= loop_list
+
+        for items in paired_samples.values():
+            if items[0]['recombinase']==items[1]['recombinase']:
+                if (items[0]['type']=='attP' and items[1]['type']=='attB'): 
+                    print ('Found matching pair of %s sites at positions %s in file 1 and %s: in file 2' % (items[0]['recombinase'], items[0]['position'],items[1]['position']))
+                elif (items[0]['type']=='attB' and items[0]['type']=='attB'): 
+                    print ('Found matching pair of %s sites at positions %s in file 1 and %s: in file 2' % (items[0]['recombinase'], items[0]['position'],items[1]['position'])) 
+            else:
+                print('No pairs found')
+            return paired_samples.values()
+        
+    paired_samples=check_complementary_sites(outputs)
+    print(paired_samples)
+    print('............................')
+    print('............................')
+    print('............................')
+    
+    def determine_sequence_topologies(seq1,seq2):
+        if (a.annotations['topology']=='circular') and (b.annotations['topology']=='circular'):
+            print('Both sequences are circular-> attempting circular recombination')
+            return 'circular'
+        else:
+            print('One of the sequences prodived is linear-> attempting linear recombination')
+            return 'linear'
+    
+    determine_sequence_topologies(a,b)
+    
     
     
 
