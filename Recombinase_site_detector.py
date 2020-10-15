@@ -3,24 +3,46 @@
 
 #!/usr/bin/python3
 import sys
+import os 
+import re
 
 import Bio.GenBank
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
-import os 
-import sys, getopt
-import re
+import argparse 
 
-def main():
-    input_1=sys.argv[1]
-    input_2=sys.argv[2]
-    #output=sys.argv[3]
+def main(argv):
+   
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input', help='Input values', nargs='+', required=True)
+    parser.add_argument('-o', '--output', help='Output values', required=True)
+    args = parser.parse_args()
+    
+    input_1=args.input[0]
+    if len(args.input)>2:
+        print('Too many arguments. Usage: Recombinase_site_detector.py -i <inputfile> <inputfile2> -o <outputfile>')
+        sys.exit()
+    elif len(args.input)==2:
+        intermolecular_reaction=True
+        input_2=args.input[1]  
+    else:
+        intermolecular_reaction=False
+        
+
+
+    if intermolecular_reaction==True:
+        print(intermolecular_reaction)
+       
+ 
+   #print 'Input file is "', inputfile
+   #print 'Output file is "', outputfile
     #print(input_1,input_2,output)
     a =  SeqIO.read(input_1, 'genbank')
     b = SeqIO.read(input_2, "genbank")
-    print(a)
+    #print(a)
     
     
     
@@ -126,14 +148,21 @@ def main():
         else:
             print('One of the sequences prodived is linear-> attempting linear recombination')
             return 'linear'
-    
-    determine_sequence_topologies(a,b)
-    
-    
+        
+        
+    pos_1=items[0]['position']
+    pos_2=items[1]['position']
+
+
+
+    new_seq=a[0:pos_1]+items[0]['dinucleotide'] + b[pos_2:] + b[0:pos_2] + a[pos_1:]
+    print(new_seq)
+    with open(args.output, 'w') as output_file:
+        SeqIO.write(new_seq, output_file, "genbank")
     
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])
 
 
 
