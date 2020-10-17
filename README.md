@@ -18,4 +18,4 @@ Usage:
 
 
 
-![alt text](https://github.com/jambomber/recombinase_simulator/blob/main/recombinase_icon.png)
+![alt text](https://github.com/jambomber/recombinase_simulator/blob/main/recombinase_icon_low.png)
