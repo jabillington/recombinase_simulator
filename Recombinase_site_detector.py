@@ -22,6 +22,7 @@ def main(argv):
     args = parser.parse_args()
     
     input_1=args.input[0]
+    print(input_1)
     if len(args.input)>2:
         print('Too many arguments. Usage: Recombinase_site_detector.py -i <inputfile> <inputfile2> -o <outputfile>')
         sys.exit()
@@ -30,7 +31,7 @@ def main(argv):
         input_2=args.input[1]  
     else:
         intermolecular_reaction=False
-        
+    print(input_2)
 
 
     if intermolecular_reaction==True:
@@ -58,7 +59,7 @@ def main(argv):
                 "enzyme_name":"phiC31"}
 
         bxb1={"attB":"TCGGCCGGCTTGTCGACGACGGCG",
-              "attP":"GTCGTGGTTTGTCTGGTCAACCACCGCG",
+              "attP":"CGTGGTTTGTCTGGTCAACCACCGCG",
               "enzyme_name":"Bxb1"}  
     
     
@@ -129,10 +130,11 @@ def main(argv):
             if items[0]['recombinase']==items[1]['recombinase']:
                 if (items[0]['type']=='attP' and items[1]['type']=='attB'): 
                     print ('Found matching pair of %s sites at positions %s in file 1 and %s: in file 2' % (items[0]['recombinase'], items[0]['position'],items[1]['position']))
-                elif (items[0]['type']=='attB' and items[0]['type']=='attB'): 
+                elif (items[0]['type']=='attB' and items[0]['type']=='attP'): 
                     print ('Found matching pair of %s sites at positions %s in file 1 and %s: in file 2' % (items[0]['recombinase'], items[0]['position'],items[1]['position'])) 
             else:
                 print('No pairs found')
+                sys.exit()
             return paired_samples.values()
         
     paired_samples=check_complementary_sites(outputs)
@@ -148,18 +150,20 @@ def main(argv):
         else:
             print('One of the sequences prodived is linear-> attempting linear recombination')
             return 'linear'
-        
-        
-    pos_1=items[0]['position']
-    pos_2=items[1]['position']
-
-
-
-    new_seq=a[0:pos_1]+items[0]['dinucleotide'] + b[pos_2:] + b[0:pos_2] + a[pos_1:]
-    print(new_seq)
-    with open(args.output, 'w') as output_file:
-        SeqIO.write(new_seq, output_file, "genbank")
     
+    
+    def calculate_new_sequences(x,a,b):
+        paired_list=list(x)
+        pos_1=paired_list[0][0]['position']
+        pos_2=paired_list[0][1]['position']
+        print(pos_1)
+        print(pos_2)
+        new_seq=a[0:pos_1]+items[0]['dinucleotide'] + b[pos_2:] + b[0:pos_2] + a[pos_1:]
+        print(new_seq)
+        with open(args.output, 'w') as output_file:
+            SeqIO.write(new_seq, output_file, "genbank")
+    calculate_new_sequences(paired_samples,a,b)
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
