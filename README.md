@@ -4,15 +4,16 @@ Project to design an in-silico recombinase simulator. Given two DNA sequences as
 Two methods are provided for doing so,
 
 recombinase_site_detector- for two sequences of interest
+
 Usage: 
 
-**python recombinase_site_detector.py -i  <inputfile1> <inputfile2> <outputfile> **
+python **recombinase_site_detector.py** -i  <inputfile1> <inputfile2> <outputfile> 
 
 batch_recombine - for recombining multiple sequences with a user specified template
 
 Usage:
 
-**python batch_recombine.py -i <path/to/batch> <common_template> **
+python **batch_recombine.py** -i <path/to/batch> <common_template> 
   
 
 
